@@ -35,6 +35,7 @@
   if ((self = [super init])) {
     monthAndYearFormatter = [[NSDateFormatter alloc] init];
     [monthAndYearFormatter setDateFormat:@"LLLL yyyy"];
+    [monthAndYearFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:[[[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"] objectAtIndex:0]]];
     [self moveToMonthForDate:date];
   }
   return self;
