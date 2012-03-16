@@ -4,6 +4,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "NSCalendarAdditions.h"
 
 @interface NSDate (KalAdditions)
 
