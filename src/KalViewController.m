@@ -38,7 +38,7 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 
 @implementation KalViewController
 
-@synthesize dataSource, delegate, initialDate, selectedDate, tableView;
+@synthesize dataSource, delegate, initialDate, selectedDate;
 
 - (id)initWithSelectedDate:(NSDate *)date
 {
@@ -63,7 +63,7 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 {
   if (dataSource != aDataSource) {
     dataSource = aDataSource;
-    self.tableView.dataSource = dataSource;
+    tableView.dataSource = dataSource;
   }
 }
 
@@ -71,14 +71,14 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 {
   if (delegate != aDelegate) {
     delegate = aDelegate;
-    self.tableView.delegate = delegate;
+    tableView.delegate = delegate;
   }
 }
 
 - (void)clearTable
 {
   [dataSource removeAllItems];
-  [self.tableView reloadData];
+  [tableView reloadData];
 }
 
 - (void)reloadData
@@ -102,8 +102,8 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
   NSDate *to = [[date NSDate] cc_dateByMovingToEndOfDay];
   [self clearTable];
   [dataSource loadItemsFromDate:from toDate:to];
-  [self.tableView reloadData];
-  [self.tableView flashScrollIndicators];
+  [tableView reloadData];
+  [tableView flashScrollIndicators];
 }
 
 - (void)showPreviousMonth
@@ -185,23 +185,31 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
     self.title = @"Calendar";
   KalView *kalView = [[[KalView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame] delegate:self logic:logic] autorelease];
   self.view = kalView;
-  self.tableView = kalView.tableView;
-  self.tableView.dataSource = dataSource;
-  self.tableView.delegate = delegate;
+  tableView = kalView.tableView;
+  tableView.dataSource = dataSource;
+  tableView.delegate = delegate;
+  [tableView retain];
   [kalView selectDate:[KalDate dateFromNSDate:self.initialDate]];
   [self reloadData];
+}
+
+- (void)viewDidUnload
+{
+  [super viewDidUnload];
+  [tableView release];
+  tableView = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
-  [self.tableView reloadData];
+  [tableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
   [super viewDidAppear:animated];
-  [self.tableView flashScrollIndicators];
+  [tableView flashScrollIndicators];
 }
 
 #pragma mark -
